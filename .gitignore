@@ -1,0 +1,4 @@
+obj/
+bin/
+access.log
+*.o
