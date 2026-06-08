@@ -36,7 +36,7 @@ void handle_file_request(int client_fd,Httprequest *request){
         if(strcmp(request->path,"/")==0){
             strcpy(filepath,"./index.html");
         }else{
-            sprintf(filepath, ".%s", request->path);
+            sprintf(filepath, "./local%s", request->path);
         }
 
         // punto ad un file aperto con path (filepath) in sola lettura ("r") 

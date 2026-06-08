@@ -20,6 +20,13 @@ int create_socket(int PORT){
         exit(EXIT_FAILURE);
     }
 
+    //permette di riutilizzare una porta usata poco fa
+    int opt = 1;
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))<0){
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
+
     //configurazione dell'inidirzzo dell'host
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY; // accetta da tutte le interfacce
