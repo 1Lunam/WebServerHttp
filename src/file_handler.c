@@ -40,7 +40,7 @@ void handle_file_request(int client_fd,Httprequest *request){
         }
 
         // punto ad un file aperto con path (filepath) in sola lettura ("r") 
-        FILE *file = fopen(filepath, "r");
+        FILE *file = fopen(filepath, "rb");
 
         //controllo se il file esiste e do 404(se non esiste) o 200(se esiste e invio il file) 
         if(file == NULL){
@@ -80,8 +80,10 @@ void handle_file_request(int client_fd,Httprequest *request){
 
             // prendo i pezzi dei file che metto in buffer tramite fgets e li sendo al client
             char buffer[1024];
-            while(fgets(buffer, sizeof(buffer),file)!=NULL){
-                send(client_fd, buffer, strlen(buffer),0);
+            size_t bytes_read;
+
+            while((bytes_read = fread(buffer, 1 ,sizeof(buffer),file))>0){
+                send(client_fd, buffer, bytes_read,0);
             }
         
             //chiusura del file

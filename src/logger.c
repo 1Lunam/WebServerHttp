@@ -41,7 +41,6 @@ void *logger_worker(void *args){
 
             if(log_file != NULL){
                 fprintf(log_file, "%s\n", msg);
-                printf("LOGGER: %s\n", msg);
                 fclose(log_file);
             }
         }else{
