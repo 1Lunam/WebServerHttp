@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define MAX_LOGS 100
+#define MAX_LOGS 1000
 #define MAX_MSG_LEN 512
 
 pthread_t thread;
@@ -41,6 +41,7 @@ void *logger_worker(void *args){
 
             if(log_file != NULL){
                 fprintf(log_file, "%s\n", msg);
+                printf("LOGGER: %s\n", msg);
                 fclose(log_file);
             }
         }else{
@@ -63,11 +64,19 @@ void logger_thread(){
 // aggiunge un log alla coda richiamato dal file_handler quando riceve 200 ok
 void add_log(const char *log_msg){
 
-    pthread_mutex_lock(&log_mutex);    
+    pthread_mutex_lock(&log_mutex);
+
+    int next_tail = (tail + 1) % MAX_LOGS;
+
+    // coda piena
+    if(next_tail == head){
+        pthread_mutex_unlock(&log_mutex);
+        return;
+    }
 
     strcpy(log_queue[tail], log_msg);
 
-    tail = (tail + 1) % MAX_LOGS;
+    tail = next_tail;
 
     pthread_mutex_unlock(&log_mutex);
 }
